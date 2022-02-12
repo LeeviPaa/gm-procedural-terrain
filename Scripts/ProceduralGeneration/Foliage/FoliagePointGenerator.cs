@@ -72,7 +72,7 @@ namespace Procedural.Foliage
             {
                 FoliageType foliageType = terrainObjectProvider.GetRandomWeightedFoliage(group, rand);
 
-                if(biomeDeterminer.HasTrees(point.Position.y))
+                if(biomeDeterminer.HasTreesSafe(point.Position.y))
                 {
                     Quaternion rotation = Quaternion.identity;
                     Vector3 scale = Vector3.one;

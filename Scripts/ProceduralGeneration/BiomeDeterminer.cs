@@ -10,11 +10,13 @@ namespace Procedural.Biomes
     {
         private readonly IReadOnlyCollection<TerrainType> _biomes;
         private readonly TerrainHeightParameters _heightParameters;
+        private readonly AnimationCurve _heightCurve;
 
         public BiomeDeterminer(TerrainType[] biomes, TerrainHeightParameters heightParameters)
         {
             _biomes = biomes;
             _heightParameters = heightParameters;
+            _heightCurve = heightParameters.HeightCurve;
         }
 
         public bool AboveWaterLevel(float scaledHeight)
@@ -40,9 +42,26 @@ namespace Procedural.Biomes
         public float NormalizeHeight(float scaledHeight) => (scaledHeight / _heightParameters.HeightMultiplier);
 
         // thread safe
-        public bool HasTrees(float scaledHeight)
+        public bool HasTreesSafe(float scaledHeight)
         {
             return GetTerrainType(scaledHeight).Trees;
+        }
+
+        public bool HasTrees(Vector2 worldPosition)
+        {
+            return GetBiomeAt(worldPosition).Trees;
+        }
+
+        public TerrainType GetBiomeAtSafe(Vector2 worldPosition, TerrainHeightParameters parameters, AnimationCurve heightCurve)
+        {
+            float height = TerrainHeightSampler.SampleHeightAt(Vector2.zero, worldPosition, parameters, heightCurve).Height;
+            return GetTerrainType(height);
+        }
+
+        public TerrainType GetBiomeAt(Vector2 worldPosition)
+        {
+            float height = TerrainHeightSampler.SampleHeightAt(Vector2.zero, worldPosition, _heightParameters, _heightCurve).Height;
+            return GetTerrainType(height);
         }
 
         public Color[] GetDebugColorMap(int mapChunkSize, NoiseSample[,] noiseMap)

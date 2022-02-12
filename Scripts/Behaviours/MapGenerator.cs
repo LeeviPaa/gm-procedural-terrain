@@ -82,7 +82,7 @@ namespace Procedural.Terrain
             if(Seed == 0)
                 Seed = System.DateTime.UtcNow.Ticks.GetHashCode();
 
-            var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale);
+            var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
             var BiomeDeterminer = new BiomeDeterminer(Biomes, TerrainParameters);
             
             NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize, MapChunkSize, center, TerrainParameters, HeightCurve);
@@ -100,7 +100,7 @@ namespace Procedural.Terrain
 
         private void Awake()
         {
-            _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale);
+            _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
             _biomeDeterminer = new BiomeDeterminer(Biomes, _terrainParameters);
         }
 

@@ -17,12 +17,15 @@ namespace Procedural.Terrain
         public readonly float Frequency;
         public readonly float HeightMultiplier;
         public readonly IReadOnlyList<Vector2> OctaveOffsets => _octaveOffsets;
+        public AnimationCurve HeightCurve => new AnimationCurve(_heightCurveKeys);
 
         private Vector2[] _octaveOffsets;
         private int _seed;
         private System.Random _prng;
+        private Keyframe[] _heightCurveKeys;
 
-        public TerrainHeightParameters(float resolution, Vector2 offset, float macroHeightScale, float macroHeightAmplitude, int octaves, float peristance, float lacunarity, int seed, float heightMultiplier)
+        public TerrainHeightParameters(float resolution, Vector2 offset, float macroHeightScale, float macroHeightAmplitude, int octaves, 
+            float peristance, float lacunarity, int seed, float heightMultiplier, AnimationCurve heightCurve)
         {
             Offset = offset;
             HeightMultiplier = heightMultiplier;
@@ -36,6 +39,7 @@ namespace Procedural.Terrain
             Amplitude = 1;
             Frequency = 1;
             MaxPossibleHeight = 1 + macroHeightAmplitude;
+            _heightCurveKeys = heightCurve.keys;
 
             _prng = new System.Random(_seed);
             _octaveOffsets = new Vector2[octaves];
