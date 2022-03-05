@@ -64,17 +64,18 @@ namespace Procedural.Biomes
             return GetTerrainType(height);
         }
 
-        public Color[] GetDebugColorMap(int mapChunkSize, NoiseSample[,] noiseMap)
+        public Color[] GetDebugColorMap(NoiseSample[,] noiseMap)
         {
-            Color[] colorMap = new Color[mapChunkSize * mapChunkSize];
+            int mapSize = noiseMap.GetLength(0);
+            Color[] colorMap = new Color[mapSize * mapSize];
 
-            for(int y = 0; y < mapChunkSize; y++)
+            for(int y = 0; y < mapSize; y++)
             {
-                for(int x = 0; x < mapChunkSize; x++)
+                for(int x = 0; x < mapSize; x++)
                 {
                     float currentHeight = noiseMap[x, y].Height;
 
-                    colorMap[y * mapChunkSize + x] = GetTerrainType(currentHeight).DebugColor;
+                    colorMap[y * mapSize + x] = GetTerrainType(currentHeight).DebugColor;
                 }
             }
             return colorMap;

@@ -14,7 +14,7 @@ namespace Procedural
             return texture;
         }
 
-        public static Texture2D TextureFromHeightMap(NoiseSample[,] heightMap)
+        public static Texture2D TextureFromHeightMap(NoiseSample[,] heightMap, float maxHeight = 1)
         {
             int width = heightMap.GetLength(0);
             int height = heightMap.GetLength(1);
@@ -25,7 +25,7 @@ namespace Procedural
             {
                 for(int x = 0; x < width; x++)
                 {
-                    colorMap[y * width + x] = Color.Lerp(Color.black, Color.white, heightMap[x, y].Height);
+                    colorMap[y * width + x] = Color.red * (0.5f + (heightMap[x, y].Height / (maxHeight)));
                 }
             }
 

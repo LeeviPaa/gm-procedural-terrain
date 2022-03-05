@@ -12,7 +12,7 @@ namespace Procedural.Terrain
         public readonly int Octaves;
         public readonly float Peristance;
         public readonly float Lacunarity;
-        public readonly float MaxPossibleHeight;
+        public readonly float MaxNoiseHeight;
         public readonly float Amplitude;
         public readonly float Frequency;
         public readonly float HeightMultiplier;
@@ -38,7 +38,7 @@ namespace Procedural.Terrain
             _seed = seed;
             Amplitude = 1;
             Frequency = 1;
-            MaxPossibleHeight = 1 + macroHeightAmplitude;
+            MaxNoiseHeight = 1 + macroHeightAmplitude;
             _heightCurveKeys = heightCurve.keys;
 
             _prng = new System.Random(_seed);
@@ -52,7 +52,7 @@ namespace Procedural.Terrain
                 _octaveOffsets[i] = new Vector2(offsetX, offsetY);
 
                 localAmplitude *= peristance;
-                MaxPossibleHeight += localAmplitude;
+                MaxNoiseHeight += localAmplitude;
             }
 
             if(resolution <= 0)

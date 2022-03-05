@@ -31,7 +31,7 @@ namespace Procedural.Terrain
             sampleSum.Derivative = new Vector3(derivative.x, - derivative.y, derivative.z);
 
             // map height between -1 and 1
-            NoiseSample height = ((sampleSum) * (1 / parameters.MaxPossibleHeight));
+            NoiseSample height = ((sampleSum) * (1 / parameters.MaxNoiseHeight));
 
             
             // the curve multiplier throws the derivate normal scale off a bit
@@ -45,20 +45,22 @@ namespace Procedural.Terrain
             return height * curveMultiplier * parameters.HeightMultiplier;
         }
 
-        public static NoiseSample[,] GenerateHeightMap(int mapWidth, int mapHeight, Vector2 center, TerrainHeightParameters parameters, AnimationCurve heightCurve)
+        public static NoiseSample[,] GenerateHeightMap(int mapWidth, int mapHeight, Vector2 center, TerrainHeightParameters parameters, AnimationCurve heightCurve, int resolution = 1)
         {
-            NoiseSample[,] noiseMap = new NoiseSample[mapWidth, mapHeight];
+            NoiseSample[,] noiseMap = new NoiseSample[mapWidth * resolution, mapHeight * resolution];
             AnimationCurve heightCurveCopy = new AnimationCurve (heightCurve.keys);
 
 
             float halfWidth = mapWidth / 2;
             float halfHeight = mapHeight / 2;            
 
-            for(int y = 0; y < mapHeight; y++)
+            for(int y = 0; y < mapHeight * resolution; y++)
             {
-                for(int x = 0; x < mapWidth; x++)
+                for(int x = 0; x < mapWidth * resolution; x++)
                 {
-                    noiseMap[x, y] = TerrainHeightSampler.SampleHeightAt(new Vector2(x - halfWidth, y - halfHeight), center, parameters, heightCurveCopy);
+                    float xScaled = ((float)x) / resolution;
+                    float yScaled = ((float)y) / resolution;
+                    noiseMap[x, y] = TerrainHeightSampler.SampleHeightAt(new Vector2(xScaled - halfWidth, yScaled - halfHeight), center, parameters, heightCurveCopy);
                 }
             }
             

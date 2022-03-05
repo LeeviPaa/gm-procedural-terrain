@@ -77,7 +77,7 @@ namespace Procedural.Terrain
             new Thread(threadStart).Start();
         }
 
-        public MapData GenerateMapData(Vector2 center)
+        public MapData GenerateMapData(Vector2 center, int resolution = 1)
         {
             if(Seed == 0)
                 Seed = System.DateTime.UtcNow.Ticks.GetHashCode();
@@ -85,17 +85,26 @@ namespace Procedural.Terrain
             var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
             var BiomeDeterminer = new BiomeDeterminer(Biomes, TerrainParameters);
             
-            NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize, MapChunkSize, center, TerrainParameters, HeightCurve);
-            var colorMap = BiomeDeterminer.GetDebugColorMap(MapChunkSize, noiseMap);
+            NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize, MapChunkSize, center, TerrainParameters, HeightCurve, resolution);
+            var colorMap = BiomeDeterminer.GetDebugColorMap(noiseMap);
 
             return new MapData(noiseMap, colorMap);
         }
 
         public void DrawMapInEditor()
         {
-            MapData mapData = GenerateMapData(Vector2.zero);
+            var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
+            MapData mapData = GenerateMapData(Vector2.zero, 1);
+            MapData heightMap = GenerateMapData(Vector2.zero, 5);
 
-            _mapDisplay.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.HeightMap, HeightScale, NoiseResolution, EditorPreviewLODValue), TextureGenerator.TextureFromColorMap(mapData.ColorMap, MapChunkSize, MapChunkSize));
+            float height = TerrainParameters.MaxNoiseHeight * TerrainParameters.HeightMultiplier;
+            int mapSize = heightMap.HeightMap.GetLength(0);
+            Debug.Log(height);
+
+            //_mapDisplay.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.HeightMap, HeightScale, NoiseResolution, EditorPreviewLODValue), TextureGenerator.TextureFromColorMap(mapData.ColorMap, MapChunkSize, MapChunkSize));
+            _mapDisplay.DrawMap(MeshGenerator.GenerateTerrainMesh(mapData.HeightMap, HeightScale, NoiseResolution, EditorPreviewLODValue), 
+                TextureGenerator.TextureFromHeightMap(heightMap.HeightMap, height),
+                TextureGenerator.TextureFromColorMap(heightMap.ColorMap, mapSize, mapSize));
         }
 
         private void Awake()

@@ -17,10 +17,18 @@ namespace Procedural
             TextureRenderer.transform.localScale = new Vector3(texture.width, 1, texture.height);
         }
 
-        internal async void DrawMesh(MeshData meshData, Texture2D texture2D)
+        public void DrawMesh(MeshData meshData, Texture2D height)
         {
             MeshFilter.sharedMesh = meshData.CreateMesh();
-            MeshRenderer.sharedMaterial.mainTexture = texture2D;
+            MeshRenderer.sharedMaterial.mainTexture = height;
+        }
+
+        public void DrawMap(MeshData meshData, Texture2D height, Texture2D color)
+        {
+            //MeshFilter.sharedMesh = meshData.CreateMesh();
+
+            MeshRenderer.sharedMaterial.SetTexture("_Color", color);
+            MeshRenderer.sharedMaterial.SetTexture("_Height", height);
         }
     }
 }
