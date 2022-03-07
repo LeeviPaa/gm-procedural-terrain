@@ -77,7 +77,7 @@ namespace Procedural.Terrain
             new Thread(threadStart).Start();
         }
 
-        public MapData GenerateMapData(Vector2 center, int resolution = 1)
+        public MapData GenerateMapData(Vector2 center, int scale = 1, int resolution = 1)
         {
             if(Seed == 0)
                 Seed = System.DateTime.UtcNow.Ticks.GetHashCode();
@@ -85,7 +85,8 @@ namespace Procedural.Terrain
             var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
             var BiomeDeterminer = new BiomeDeterminer(Biomes, TerrainParameters);
             
-            NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize, MapChunkSize, center, TerrainParameters, HeightCurve, resolution);
+            // TODO make the resolution parameter a float so a smaller map can be generated
+            NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize * scale, MapChunkSize * scale, center, TerrainParameters, HeightCurve, resolution);
             var colorMap = BiomeDeterminer.GetDebugColorMap(noiseMap);
 
             return new MapData(noiseMap, colorMap);
