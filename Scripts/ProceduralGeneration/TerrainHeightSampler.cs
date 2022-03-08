@@ -7,10 +7,12 @@ namespace Procedural.Terrain
     {
         public static NoiseSample SampleHeightAt(Vector2 coordinates, Vector2 worldPosition, TerrainHeightParameters parameters, AnimationCurve heightCurve)
         {
+            // TODO: remove the retarded y-component negation!
+
             float amplitude = 1;
             float frequency = 1;
             worldPosition += parameters.Offset;
-            Vector2 point = coordinates + new Vector2(worldPosition.x, -worldPosition.y);
+            Vector2 point = coordinates + new Vector2(worldPosition.x, worldPosition.y);
 
             NoiseSample sampleSum = Noise.PerlinSample(point, parameters.Resolution, frequency);
             NoiseSample macroHeight = Noise.PerlinSample(point, parameters.Resolution * parameters.MacroHeightScale, frequency) * parameters.MacroHeightAmplitude;
@@ -21,14 +23,13 @@ namespace Procedural.Terrain
                 amplitude *= parameters.Peristance;
                 frequency *= parameters.Lacunarity;
 
-                point = coordinates + new Vector2(worldPosition.x, -worldPosition.y) + parameters.OctaveOffsets[octave];
+                point = coordinates + new Vector2(worldPosition.x, worldPosition.y) + parameters.OctaveOffsets[octave];
 
                 sampleSum += Noise.PerlinSample(point, parameters.Resolution, frequency) * amplitude;
             }
 
-            // inverse derivative Y since we inverted the world position Y 
             Vector3 derivative = sampleSum.Derivative;
-            sampleSum.Derivative = new Vector3(derivative.x, - derivative.y, derivative.z);
+            sampleSum.Derivative = new Vector3(derivative.x, derivative.y, derivative.z);
 
             // map height between -1 and 1
             NoiseSample height = ((sampleSum) * (1 / parameters.MaxNoiseHeight));

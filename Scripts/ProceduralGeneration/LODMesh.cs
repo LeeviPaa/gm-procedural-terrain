@@ -34,8 +34,8 @@ namespace Procedural.Terrain
 
             int myLodLevel = surroundLodLevels.Self;
 
-            // top
-            int sideLodLevel = surroundLodLevels.Up;
+            // bottom
+            int sideLodLevel = surroundLodLevels.Down;
             int lodDelta = sideLodLevel - myLodLevel;
             int meshSimplificationIncrement = lodDelta * 2;
             int startIndex = 0;
@@ -43,8 +43,8 @@ namespace Procedural.Terrain
             int endIndex = meshSize - 1;
             AdjustEdgeVertices(vertices, lodDelta, startIndex, endIndex, vertexIncrement);
 
-            // bottom
-            sideLodLevel = surroundLodLevels.Down;
+            // top
+            sideLodLevel = surroundLodLevels.Up;
             lodDelta = sideLodLevel - myLodLevel;
             meshSimplificationIncrement = lodDelta * 2;
             startIndex = (meshSize - 1) * meshSize;

@@ -58,7 +58,7 @@ namespace Procedural.Terrain
                     if(this == null || gameObject == null)
                         break;
                     
-                    Vector2 viewedChunkCoord = new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY - yOffset);
+                    Vector2 viewedChunkCoord = new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset);
                     Vector2 viewedChunkPosition = viewedChunkCoord * _chunkSize;
                     Bounds chunkBounds = new Bounds(viewedChunkPosition, _chunkSize * Vector2.one);
                     float distance = Mathf.Sqrt (chunkBounds.SqrDistance (ViewerPositionV2));

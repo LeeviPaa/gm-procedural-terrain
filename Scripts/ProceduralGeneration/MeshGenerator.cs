@@ -27,7 +27,7 @@ namespace Procedural
 
 					float normalHeightScale = resolution;
                     float height = sample.Height;
-		    		Vector3 vertexPosition = new Vector3 (topLeftX + x, height, topLeftZ - y);
+		    		Vector3 vertexPosition = new Vector3 (topLeftX + x, height, topLeftZ + y);
 		    		Vector2 percent = new Vector2 (x / (float)meshSize, y / (float)meshSize);
 
 					Vector3 normalFromDerivative = sample.GetNormal(normalHeightScale);
@@ -35,8 +35,8 @@ namespace Procedural
                     meshData.AddVertex(vertexPosition, normalFromDerivative, percent, vertexIndex);
 
 		    		if (x < meshSize - 1 && y < meshSize - 1) {
-		    			meshData.AddTriangle (vertexIndex, vertexIndex + verticesPerLine + 1, vertexIndex + verticesPerLine);
-		    			meshData.AddTriangle (vertexIndex + verticesPerLine + 1, vertexIndex, vertexIndex + 1);
+		    			meshData.AddTriangle (vertexIndex, vertexIndex + verticesPerLine, vertexIndex + verticesPerLine + 1);
+		    			meshData.AddTriangle (vertexIndex + verticesPerLine + 1, vertexIndex + 1, vertexIndex);
 		    		}
 
 		    		vertexIndex++;

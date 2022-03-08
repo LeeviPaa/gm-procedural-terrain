@@ -38,7 +38,7 @@ namespace Procedural.Foliage
                 foreach(Vector2 point in points)
                 {           
                     Vector2 adjustedPoint = point - (size * 0.5f);
-                    Vector3 worldPoint = worldPosition + new Vector3(adjustedPoint.x, 1, -adjustedPoint.y);
+                    Vector3 worldPoint = worldPosition + new Vector3(adjustedPoint.x, 1, adjustedPoint.y);
 
                     NoiseSample noiseSample = TerrainHeightSampler.SampleHeightAt(adjustedPoint, worldPositionV2, parameters, curve);
                     worldPoint.y = noiseSample.Height;
