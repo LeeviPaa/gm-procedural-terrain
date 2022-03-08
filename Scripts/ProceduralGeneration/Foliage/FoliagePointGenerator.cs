@@ -26,6 +26,11 @@ namespace Procedural.Foliage
             AnimationCurve curve = new AnimationCurve(heightCurve.keys);
             Vector3 worldPosition = position;
             Vector2 worldPositionV2 = new Vector2(position.x, position.z);
+
+
+            // Why does this work???
+            worldPositionV2.y -= (MapGenerator.MapChunkSize);
+
             int seed = (int)(System.DateTime.Now.Ticks/2);
 
             ThreadStart threadStart = () => 
@@ -38,6 +43,7 @@ namespace Procedural.Foliage
                 foreach(Vector2 point in points)
                 {           
                     Vector2 adjustedPoint = point - (size * 0.5f);
+
                     Vector3 worldPoint = worldPosition + new Vector3(adjustedPoint.x, 1, adjustedPoint.y);
 
                     NoiseSample noiseSample = TerrainHeightSampler.SampleHeightAt(adjustedPoint, worldPositionV2, parameters, curve);
