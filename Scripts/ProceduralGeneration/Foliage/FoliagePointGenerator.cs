@@ -42,7 +42,7 @@ namespace Procedural.Foliage
 
                     Vector3 worldPoint = worldPosition + new Vector3(adjustedPoint.x, 1, adjustedPoint.y);
 
-                    NoiseSample noiseSample = TerrainHeightSampler.SampleHeightAt(adjustedPoint, worldPositionV2, parameters, curve);
+                    NoiseSample noiseSample = TerrainHeightSampler.SampleHeightAt(adjustedPoint + worldPositionV2, parameters, curve);
                     worldPoint.y = noiseSample.Height;
 
                     Vector3 normal = noiseSample.GetNormal(parameters.Resolution);

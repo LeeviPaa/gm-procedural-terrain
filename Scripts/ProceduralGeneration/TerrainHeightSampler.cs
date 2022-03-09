@@ -5,14 +5,11 @@ namespace Procedural.Terrain
 {
     public static class TerrainHeightSampler
     {
-        public static NoiseSample SampleHeightAt(Vector2 coordinates, Vector2 worldPosition, TerrainHeightParameters parameters, AnimationCurve heightCurve)
+        public static NoiseSample SampleHeightAt(Vector2 coordinates, TerrainHeightParameters parameters, AnimationCurve heightCurve)
         {
-            // TODO: remove the retarded y-component negation!
-
             float amplitude = 1;
             float frequency = 1;
-            worldPosition += parameters.Offset;
-            Vector2 point = coordinates + new Vector2(worldPosition.x, worldPosition.y);
+            Vector2 point = coordinates + parameters.Offset;
 
             NoiseSample sampleSum = Noise.PerlinSample(point, parameters.Resolution, frequency);
             NoiseSample macroHeight = Noise.PerlinSample(point, parameters.Resolution * parameters.MacroHeightScale, frequency) * parameters.MacroHeightAmplitude;
@@ -61,7 +58,7 @@ namespace Procedural.Terrain
                 {
                     float xScaled = ((float)x) / resolution;
                     float yScaled = ((float)y) / resolution;
-                    noiseMap[x, y] = TerrainHeightSampler.SampleHeightAt(new Vector2(xScaled - halfWidth, yScaled - halfHeight), center, parameters, heightCurveCopy);
+                    noiseMap[x, y] = TerrainHeightSampler.SampleHeightAt(new Vector2(xScaled - halfWidth, yScaled - halfHeight) + center, parameters, heightCurveCopy);
                 }
             }
             

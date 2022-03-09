@@ -54,13 +54,13 @@ namespace Procedural.Biomes
 
         public TerrainType GetBiomeAtSafe(Vector2 worldPosition, TerrainHeightParameters parameters, AnimationCurve heightCurve)
         {
-            float height = TerrainHeightSampler.SampleHeightAt(Vector2.zero, worldPosition, parameters, heightCurve).Height;
+            float height = TerrainHeightSampler.SampleHeightAt(worldPosition, parameters, heightCurve).Height;
             return GetTerrainType(height);
         }
 
         public TerrainType GetBiomeAt(Vector2 worldPosition)
         {
-            float height = TerrainHeightSampler.SampleHeightAt(Vector2.zero, worldPosition, _heightParameters, _heightCurve).Height;
+            float height = TerrainHeightSampler.SampleHeightAt(worldPosition, _heightParameters, _heightCurve).Height;
             return GetTerrainType(height);
         }
 
