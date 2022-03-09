@@ -23,7 +23,7 @@ namespace Procedural.Terrain
                 amplitude *= parameters.Peristance;
                 frequency *= parameters.Lacunarity;
 
-                point = coordinates + new Vector2(worldPosition.x, worldPosition.y) + parameters.OctaveOffsets[octave];
+                point += parameters.OctaveOffsets[octave];
 
                 sampleSum += Noise.PerlinSample(point, parameters.Resolution, frequency) * amplitude;
             }
