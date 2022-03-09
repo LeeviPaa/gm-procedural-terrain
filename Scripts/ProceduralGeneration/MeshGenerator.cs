@@ -11,7 +11,7 @@ namespace Procedural
         {
 		    int meshSize = heightMap.GetLength (0);
 		    float topLeftX = (meshSize - 1) / -2f;
-		    float topLeftZ = (meshSize - 1) / 2f;
+		    float topLeftZ = (meshSize - 1) / -2f;
 
 		    int meshSimplificationIncrement = (int)System.Math.Pow(2, lodLevel);
 		    int verticesPerLine = (meshSize - 1) / meshSimplificationIncrement + 1;

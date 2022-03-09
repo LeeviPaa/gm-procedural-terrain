@@ -27,10 +27,6 @@ namespace Procedural.Foliage
             Vector3 worldPosition = position;
             Vector2 worldPositionV2 = new Vector2(position.x, position.z);
 
-
-            // Why does this work???
-            worldPositionV2.y -= (MapGenerator.MapChunkSize);
-
             int seed = (int)(System.DateTime.Now.Ticks/2);
 
             ThreadStart threadStart = () => 
