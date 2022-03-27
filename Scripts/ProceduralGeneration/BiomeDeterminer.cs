@@ -11,17 +11,19 @@ namespace Procedural.Biomes
         private readonly IReadOnlyCollection<TerrainType> _biomes;
         private readonly TerrainHeightParameters _heightParameters;
         private readonly AnimationCurve _heightCurve;
+        private float _waterLevel;
 
         public BiomeDeterminer(TerrainType[] biomes, TerrainHeightParameters heightParameters)
         {
             _biomes = biomes;
             _heightParameters = heightParameters;
             _heightCurve = heightParameters.HeightCurve;
+            _waterLevel = GetScaledWaterLevel();
         }
 
         public bool AboveWaterLevel(float scaledHeight)
         {
-            throw new NotImplementedException();
+            return scaledHeight > _waterLevel;
         }
 
         public TerrainType GetTerrainType(float scaledHeight)
