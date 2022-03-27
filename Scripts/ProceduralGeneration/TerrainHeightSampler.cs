@@ -43,18 +43,19 @@ namespace Procedural.Terrain
             return height * curveMultiplier * parameters.HeightMultiplier;
         }
 
-        public static NoiseSample[,] GenerateHeightMap(int mapWidth, int mapHeight, Vector2 center, TerrainHeightParameters parameters, AnimationCurve heightCurve, int resolution = 1)
+        public static NoiseSample[,] GenerateHeightMap(int mapEdgeSize, Vector2 center, TerrainHeightParameters parameters, AnimationCurve heightCurve, float resolution = 1)
         {
-            NoiseSample[,] noiseMap = new NoiseSample[mapWidth * resolution, mapHeight * resolution];
+            int noiseMapEdgeSize = Mathf.CeilToInt(mapEdgeSize * resolution);
+            NoiseSample[,] noiseMap = new NoiseSample[noiseMapEdgeSize, noiseMapEdgeSize];
             AnimationCurve heightCurveCopy = new AnimationCurve (heightCurve.keys);
 
 
-            float halfWidth = mapWidth / 2;
-            float halfHeight = mapHeight / 2;            
+            float halfWidth = mapEdgeSize / 2;
+            float halfHeight = mapEdgeSize / 2;         
 
-            for(int y = 0; y < mapHeight * resolution; y++)
+            for(int y = 0; y < noiseMapEdgeSize; y++)
             {
-                for(int x = 0; x < mapWidth * resolution; x++)
+                for(int x = 0; x < noiseMapEdgeSize; x++)
                 {
                     float xScaled = ((float)x) / resolution;
                     float yScaled = ((float)y) / resolution;

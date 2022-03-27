@@ -49,7 +49,7 @@ namespace Procedural.Terrain
             float waterHeight = _biomeDeterminer.GetScaledWaterLevel();
             GameObject water = Instantiate(_mapGenerator.TerrainObjectProvider.WaterPrefab, transform);
             water.transform.localPosition = Vector3.up * waterHeight;
-            water.transform.localScale = Vector3.one * (MapGenerator.MapChunkSize - 1);
+            water.transform.localScale = Vector3.one * (MapGenerator.MapChunkSize - 1) * 0.1f;
         }
 
         public async void UpdateLodLevel(int lodLevel)
