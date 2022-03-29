@@ -25,9 +25,21 @@ namespace Procedural.Terrain
         private int _chunksVisibleInViewDst;
         private Dictionary<Vector2, TerrainChunk> _terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
         private Vector2 _oldViewerPosition;
+        private bool _enabled;
+
+        public void Enable()
+        {
+            _enabled = true;
+        }
 
         private void Start()
         {
+            #if UNITY_EDITOR
+            _enabled = true;
+            #else
+            _enabled = false;
+            #endif
+
             MaxViewDist = LODDistanceInfo.Last().VisibleDistTreshold;
             _chunkSize = MapGenerator.MapChunkSize - 1;
             _chunksVisibleInViewDst = Mathf.RoundToInt(MaxViewDist / _chunkSize);
@@ -37,6 +49,9 @@ namespace Procedural.Terrain
 
         private void Update()
         {
+            if(!_enabled)
+                return;
+
             if((_oldViewerPosition - ViewerPositionV2).sqrMagnitude >= UpdateChunkAfterDistanceTresholdSquared)
             {
                 UpdateVisibleChunks();

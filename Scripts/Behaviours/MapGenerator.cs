@@ -107,7 +107,7 @@ namespace Procedural.Terrain
                 TextureGenerator.TextureFromColorMap(heightMap.ColorMap, mapSize, mapSize));
         }
 
-        private void Awake()
+        private void Start()
         {
             _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
             _biomeDeterminer = new BiomeDeterminer(Biomes, _terrainParameters);
