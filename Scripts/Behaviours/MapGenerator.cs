@@ -45,6 +45,21 @@ namespace Procedural.Terrain
         public int EditorPreviewLODValue;
         private TerrainHeightParameters _terrainParameters;
         private BiomeDeterminer _biomeDeterminer;
+        private bool _initialized = false;
+
+        public void Start()
+        {
+            EnsureInitialized();
+        }
+
+        public void EnsureInitialized()
+        {
+            if(_initialized) return;
+            
+            _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
+            _biomeDeterminer = new BiomeDeterminer(Biomes, _terrainParameters);
+            _initialized = true;
+        }
 
         public void RequestMeshData(MapData mapData, int lodLevel, Action<MeshData> callback)
         {
@@ -82,8 +97,7 @@ namespace Procedural.Terrain
             if(Seed == 0)
                 Seed = System.DateTime.UtcNow.Ticks.GetHashCode();
 
-            var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
-            var BiomeDeterminer = new BiomeDeterminer(Biomes, TerrainParameters);
+            EnsureInitialized();
             
             NoiseSample[,] noiseMap = TerrainHeightSampler.GenerateHeightMap(MapChunkSize * scale, center, TerrainParameters, HeightCurve, resolution);
             var colorMap = BiomeDeterminer.GetDebugColorMap(noiseMap);
@@ -93,7 +107,8 @@ namespace Procedural.Terrain
 
         public void DrawMapInEditor()
         {
-            var TerrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
+            EnsureInitialized();
+            
             MapData mapData = GenerateMapData(Vector2.zero, 1);
             MapData heightMap = GenerateMapData(Vector2.zero, 5);
 
@@ -105,12 +120,6 @@ namespace Procedural.Terrain
             _mapDisplay.DrawMap(MeshGenerator.GenerateTerrainMesh(mapData.HeightMap, HeightScale, NoiseResolution, EditorPreviewLODValue), 
                 TextureGenerator.TextureFromHeightMap(heightMap.HeightMap, height),
                 TextureGenerator.TextureFromColorMap(heightMap.ColorMap, mapSize, mapSize));
-        }
-
-        private void Start()
-        {
-            _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
-            _biomeDeterminer = new BiomeDeterminer(Biomes, _terrainParameters);
         }
 
         private void OnValidate()
