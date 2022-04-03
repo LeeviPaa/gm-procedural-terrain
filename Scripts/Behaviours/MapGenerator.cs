@@ -33,7 +33,7 @@ namespace Procedural.Terrain
 
         [Header("Regions")]
         public AnimationCurve HeightCurve = new AnimationCurve();
-        public TerrainType[] Biomes;
+        public BiomeDefinitionProvider BiomeProvider;
         [Header("References")]
         [SerializeField]
         public MapDisplay _mapDisplay;
@@ -57,7 +57,7 @@ namespace Procedural.Terrain
             if(_initialized) return;
             
             _terrainParameters = new TerrainHeightParameters(NoiseResolution, Offset, MacroHeightScale, MacroHeightAmplitude, Octaves, Persistance, Lacunarity, Seed, HeightScale, HeightCurve);
-            _biomeDeterminer = new BiomeDeterminer(Biomes, _terrainParameters);
+            _biomeDeterminer = new BiomeDeterminer(BiomeProvider.Biomes, _terrainParameters);
             _initialized = true;
         }
 
@@ -107,6 +107,7 @@ namespace Procedural.Terrain
 
         public void DrawMapInEditor()
         {
+            _initialized = false;
             EnsureInitialized();
             
             MapData mapData = GenerateMapData(Vector2.zero, 1);

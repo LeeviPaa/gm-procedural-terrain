@@ -13,7 +13,7 @@ namespace Procedural.Biomes
         private readonly AnimationCurve _heightCurve;
         private float _waterLevel;
 
-        public BiomeDeterminer(TerrainType[] biomes, TerrainHeightParameters heightParameters)
+        public BiomeDeterminer(IReadOnlyCollection<TerrainType> biomes, TerrainHeightParameters heightParameters)
         {
             _biomes = biomes;
             _heightParameters = heightParameters;

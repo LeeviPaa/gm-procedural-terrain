@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Procedural.Terrain
+namespace Procedural.Biomes
 {
     [System.Serializable]
     public struct TerrainType
@@ -9,6 +9,7 @@ namespace Procedural.Terrain
         public float Height => _height;
         public Color DebugColor => _color;
         public bool Trees => _trees;
+        public AudioClip AmbientTrack => _ambientTrack;
 
         [SerializeField]
         private string _label;
@@ -19,6 +20,8 @@ namespace Procedural.Terrain
         private Color _color;
         [SerializeField]
         private bool _trees;
+        [SerializeField]
+        private AudioClip _ambientTrack;
 
         public override bool Equals(object obj)
         {

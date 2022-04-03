@@ -25,7 +25,7 @@ namespace Procedural.Terrain
         private int _chunksVisibleInViewDst;
         private Dictionary<Vector2, TerrainChunk> _terrainChunkDictionary = new Dictionary<Vector2, TerrainChunk>();
         private Vector2 _oldViewerPosition;
-        private bool _enabled;
+        private bool _enabled = false;
 
         public void Enable()
         {
@@ -36,8 +36,6 @@ namespace Procedural.Terrain
         {
             #if UNITY_EDITOR
             _enabled = true;
-            #else
-            _enabled = false;
             #endif
 
             MaxViewDist = LODDistanceInfo.Last().VisibleDistTreshold;
