@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GPUInstancer;
 using Procedural.Terrain;
 using UnityEngine;
 
@@ -20,11 +21,13 @@ namespace Procedural.Foliage
         private TerrainObjectProvider _terrainObjectProvider;
         [SerializeField]
         private Transform _player;
+        [SerializeField]
+        private GPUInstancerPrefabManager _instancerManager;
 
-        private Pool<Transform> _treePool;
-        private Pool<Transform> _bushPool;
-        private Pool<Transform> _rockPool;
-        private Pool<Transform> _grassPool;
+        private GpuIstancerPool _treePool;
+        private GpuIstancerPool _bushPool;
+        private GpuIstancerPool _rockPool;
+        private GpuIstancerPool _grassPool;
 
         private HashSet<FoliageChunk> _distantVisibleChunks = new HashSet<FoliageChunk>();
         private HashSet<FoliageChunk> _distantPreviouslyVisibleChunks = new HashSet<FoliageChunk>();
@@ -45,19 +48,19 @@ namespace Procedural.Foliage
             GameObject treePrefab = treeDefinition.FoliageObjects.GetRandomEntry();
             GameObject treeParent = new GameObject("Trees");
             treeParent.transform.parent = distantParent.transform;
-            _treePool = new Pool<Transform>(treePrefab.transform, 15000, treeParent.transform);
+            _treePool = new GpuIstancerPool(treePrefab.GetComponent<GPUInstancerPrefab>(), 1, treeParent.transform, _instancerManager);
 
             var rockDefinition = _terrainObjectProvider.GetFoliageDefinition(FoliageGroup.Distant, FoliageType.Rock);
             GameObject rockPrefab = rockDefinition.FoliageObjects.GetRandomEntry();
             GameObject rockParent = new GameObject("Rocks");
             rockParent.transform.parent = distantParent.transform;
-            _rockPool = new Pool<Transform>(rockPrefab.transform, 1, rockParent.transform);
+            _rockPool = new GpuIstancerPool(rockPrefab.GetComponent<GPUInstancerPrefab>(), 1, rockParent.transform, _instancerManager);
 
             var bushDefinition = _terrainObjectProvider.GetFoliageDefinition(FoliageGroup.Distant, FoliageType.Bush);
             GameObject bushPrefab = bushDefinition.FoliageObjects.GetRandomEntry();
             GameObject bushParent = new GameObject("Bushes");
             bushParent.transform.parent = distantParent.transform;
-            _bushPool = new Pool<Transform>(bushPrefab.transform, 1, bushParent.transform);
+            _bushPool = new GpuIstancerPool(bushPrefab.GetComponent<GPUInstancerPrefab>(), 1, bushParent.transform, _instancerManager);
 
             // near foliage
             GameObject nearParent = new GameObject("NearObjects");
@@ -67,7 +70,7 @@ namespace Procedural.Foliage
             GameObject grassPrefab = grassDefinition.FoliageObjects.GetRandomEntry();
             GameObject grassParent = new GameObject("Grass");
             grassParent.transform.parent = nearParent.transform;
-            _grassPool = new Pool<Transform>(grassPrefab.transform, 1, grassParent.transform);
+            _grassPool = new GpuIstancerPool(grassPrefab.GetComponent<GPUInstancerPrefab>(), 1, grassParent.transform, _instancerManager);
 
             UpdateFoliageChunks(FoliageGroup.Distant, _terrainObjectProvider.DistantFoliageDistance, _distantVisibleChunks, _distantPreviouslyVisibleChunks);
             UpdateFoliageChunks(FoliageGroup.Near, _terrainObjectProvider.NearFoliageDistance, _nearVisibleChunks, _nearPreviouslyVisibleChunks);
@@ -129,7 +132,7 @@ namespace Procedural.Foliage
         {
             foreach(var point in chunk.Points)
             {
-                Transform foliageTransform = GetFoliageForPoint(point);
+                GPUInstancerPrefab foliageTransform = GetFoliageForPoint(point);
                 chunk.DisplayFoliage(point, foliageTransform);
             }
         }
@@ -142,9 +145,9 @@ namespace Procedural.Foliage
             }
         }
 
-        private Transform GetFoliageForPoint(FoliagePoint foliagePoint)
+        private GPUInstancerPrefab GetFoliageForPoint(FoliagePoint foliagePoint)
         {
-            Transform foliageObject = null;
+            GPUInstancerPrefab foliageObject = null;
             switch(foliagePoint.FoliageType)
             {
                 case FoliageType.Tree:
@@ -162,12 +165,13 @@ namespace Procedural.Foliage
                 default:
                     break;
             }
-
-            foliagePoint.SetTransfromValues(foliageObject);
+        
+            foliagePoint.SetTransfromValues(foliageObject.transform);
+            _instancerManager.UpdateTransformDataForInstance(foliageObject);
             return foliageObject;
         }
 
-        private void HideFoliage(FoliagePoint foliagePoint, Transform foliageObject)
+        private void HideFoliage(FoliagePoint foliagePoint, GPUInstancerPrefab foliageObject)
         {
             switch(foliagePoint.FoliageType)
             {

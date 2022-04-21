@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using GPUInstancer;
 
 namespace Procedural.Foliage
 {
@@ -10,13 +11,13 @@ namespace Procedural.Foliage
         public IEnumerable<FoliagePoint> Points => _foliagePoints;
         public readonly Bounds Bounds;
 
-        private readonly IDictionary<FoliagePoint, Transform> _foliageObjectDictionary;
+        private readonly IDictionary<FoliagePoint, GPUInstancerPrefab> _foliageObjectDictionary;
         private readonly HashSet<FoliagePoint> _foliagePoints;
 
         public FoliageChunk(HashSet<FoliagePoint> points, Bounds bounds)
         {
             _foliagePoints = points;
-            _foliageObjectDictionary = new Dictionary<FoliagePoint, Transform>();
+            _foliageObjectDictionary = new Dictionary<FoliagePoint, GPUInstancerPrefab>();
             Bounds = bounds;
 
             foreach(var point in points)
@@ -25,14 +26,14 @@ namespace Procedural.Foliage
             }
         }
 
-        public void DisplayFoliage(FoliagePoint point, Transform foliageObject)
+        public void DisplayFoliage(FoliagePoint point, GPUInstancerPrefab foliageObject)
         {
             _foliageObjectDictionary[point] = foliageObject;
         }
 
-        public Transform GetAndHideFoliage(FoliagePoint point)
+        public GPUInstancerPrefab GetAndHideFoliage(FoliagePoint point)
         {
-            Transform foliageObject = _foliageObjectDictionary[point];
+            GPUInstancerPrefab foliageObject = _foliageObjectDictionary[point];
             _foliageObjectDictionary[point] = null;
 
             return foliageObject;
